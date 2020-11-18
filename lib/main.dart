@@ -19,10 +19,21 @@ class HomePage extends StatefulWidget {
   State<StatefulWidget> createState() => HomeState();
 }
 
-class HomeState extends State<HomePage> {
+class HomeState extends State<HomePage> with TickerProviderStateMixin {
   int _counter = 0;
 
   bool _showImage = true;
+
+  AnimationController controller;
+  CurvedAnimation curve;
+
+  @override
+  void initState() {
+    super.initState();
+    controller =
+        AnimationController(duration: Duration(seconds: 3), vsync: this);
+    curve = CurvedAnimation(parent: controller, curve: Curves.easeIn);
+  }
 
   _increaseCounter() {
     setState(() {
@@ -40,13 +51,22 @@ class HomeState extends State<HomePage> {
   }
 
   toggleImage(bool showImage) {
+    if (_showImage)
+      controller.reverse();
+    else
+      controller.forward();
+
     setState(() {
       this._showImage = showImage;
     });
   }
 
   _getImage() {
-    return _showImage ? Tab(icon: Icon(Icons.ac_unit_sharp)) : null;
+    return FadeTransition(
+        opacity: curve,
+        child: FlutterLogo(
+          size: 50,
+        ));
   }
 
   @override
