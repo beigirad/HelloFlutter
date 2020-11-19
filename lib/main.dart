@@ -123,7 +123,8 @@ class HomeState extends State<HomePage> with TickerProviderStateMixin {
             CustomPaint(
               painter: Message('Custom Painter'),
               size: Size(100, 100),
-            )
+            ),
+            CustomButton(label: 'Composed Button')
           ],
         ),
       ),
@@ -183,5 +184,21 @@ class Message extends CustomPainter {
   @override
   bool shouldRepaint(covariant Message oldDelegate) {
     return oldDelegate.message != message;
+  }
+}
+
+class CustomButton extends StatelessWidget {
+  final String label;
+
+  const CustomButton({Key key, this.label}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+        onPressed: () {},
+        child: Padding(
+          padding: const EdgeInsets.only(top: 16, bottom: 16),
+          child: Text(label),
+        ));
   }
 }
