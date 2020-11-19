@@ -12,6 +12,7 @@ class MyStarterApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: HomePage(),
+      routes: {PageA.routeName: (context) => PageA()},
     );
   }
 }
@@ -124,7 +125,7 @@ class HomeState extends State<HomePage> with TickerProviderStateMixin {
               painter: Message('Custom Painter'),
               size: Size(100, 100),
             ),
-            CustomButton(label: 'Composed Button')
+            CustomButton(label: 'Goto PageA')
           ],
         ),
       ),
@@ -195,10 +196,40 @@ class CustomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).pushNamed('/a',
+              arguments: PageAArguments('This message comes from main page'));
+        },
         child: Padding(
           padding: const EdgeInsets.only(top: 16, bottom: 16),
           child: Text(label),
         ));
   }
+}
+
+class PageA extends StatelessWidget {
+  static const routeName = '/a';
+
+  @override
+  Widget build(BuildContext context) {
+    final PageAArguments args = ModalRoute.of(context).settings.arguments;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('PageA'),
+      ),
+      body: Center(
+        child: Text(
+          args.message,
+          style: TextStyle(fontSize: 16),
+        ),
+      ),
+    );
+  }
+}
+
+class PageAArguments {
+  final String message;
+
+  PageAArguments(this.message);
 }
