@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -117,6 +119,10 @@ class HomeState extends State<HomePage> with TickerProviderStateMixin {
             ),
             Center(
               child: _getImage(),
+            ),
+            CustomPaint(
+              painter: Message('Custom Painter'),
+              size: Size(100, 100),
             )
           ],
         ),
@@ -141,5 +147,41 @@ class HomeState extends State<HomePage> with TickerProviderStateMixin {
       textColor: Colors.white,
     );
   }
+}
 
+class Message extends CustomPainter {
+  String message;
+
+  Message(String message) {
+    this.message = message;
+  }
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    canvas.drawRect(
+        Rect.fromPoints(Offset(0, 0), Offset(100, 20)),
+        Paint()
+          ..color = Colors.green
+          ..style = PaintingStyle.stroke
+          ..strokeJoin = StrokeJoin.round
+          ..strokeWidth = 5);
+
+    var textStyle = ui.TextStyle(color: Colors.deepPurple);
+    var paragraphBuilder = ui.ParagraphBuilder(ui.ParagraphStyle(
+        textAlign: TextAlign.center,
+        fontWeight: FontWeight.bold,
+        fontSize: 20,
+        fontStyle: FontStyle.normal))
+      ..pushStyle(textStyle)
+      ..addText(message);
+    canvas.drawParagraph(
+        paragraphBuilder.build()
+          ..layout(ui.ParagraphConstraints(width: size.width)),
+        Offset.zero);
+  }
+
+  @override
+  bool shouldRepaint(covariant Message oldDelegate) {
+    return oldDelegate.message != message;
+  }
 }
